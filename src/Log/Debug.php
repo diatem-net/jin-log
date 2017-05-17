@@ -19,12 +19,12 @@ class Debug implements AssetsInterface
   /**
    *  @var boolean  Etat d'activation de l'affichage des instructions de debug
    */
-  private static $activated = true;
+  protected static $activated = true;
 
   /**
    *  @var boolean  Premier trace/dump envoyé dans la sortie navigateur. (Pour affichage css nécessaire)
    */
-  private static $firstDump = false;
+  protected static $firstDump = false;
 
   /**
    * Implements getAssetUrl function
@@ -173,7 +173,7 @@ class Debug implements AssetsInterface
    * @param  type $var  Variable à dumper
    * @return string     Dump formatté HTML
    */
-  private static function getDumpContent($var)
+  protected static function getDumpContent($var)
   {
     $dump = '<div class="dump_segment_content_main">';
       $dump .= '<div class="dump_variable">';
@@ -190,7 +190,7 @@ class Debug implements AssetsInterface
    * @param  string  $name  Nom de l'élément ('' par défaut)
    * @return string         Dump de la variable
    */
-  private static function dumpElement($var, $name = '')
+  protected static function dumpElement($var, $name = '')
   {
     $dump = '';
 
@@ -422,7 +422,7 @@ class Debug implements AssetsInterface
    * @param  string   $titre  (optional) Titre de la fenêtre (Vide par défaut)
    * @return string           Contenu formaté
    */
-  private static function getHeader($titre = NULL)
+  protected static function getHeader($titre = NULL)
   {
     $dump = '';
     if (!self::$firstDump) {
@@ -441,7 +441,7 @@ class Debug implements AssetsInterface
    *
    * @return string  Contenu formaté
    */
-  private static function getFooter()
+  protected static function getFooter()
   {
     return '</div>';
   }

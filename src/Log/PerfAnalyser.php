@@ -16,7 +16,7 @@ class PerfAnalyser
   /**
    * @var array ableau des points de contrôle enregistrés
    */
-  private $points = array();
+  protected $points = array();
 
   /**
    * Constructeur (instancie un premier point de contrôle, débute l'analyse)
@@ -39,7 +39,7 @@ class PerfAnalyser
    *
    * @param  string  $entete (optional) En-tête affiché ('[POINT]' par défaut)
    */
-  private function _addPoint($entete = '[POINT]')
+  protected function _addPoint($entete = '[POINT]')
   {
     $trace = debug_backtrace();
     $time = round(microtime(true) * 1000);

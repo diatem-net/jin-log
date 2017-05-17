@@ -41,7 +41,7 @@ class Notifier
   /**
    * Vérifie que le stockage en session existe
   */
-  private static function checkStorage()
+  protected static function checkStorage()
   {
     if( !isset($_COOKIE) || !isset($_COOKIE[self::COOKIE_NAME]) ) {
       static::clear();

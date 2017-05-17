@@ -18,12 +18,12 @@ class Log
   /**
    * @var boolean  Service actif / inactif
    */
-  private static $enabled = false;
+  protected static $enabled = false;
 
   /**
    * @var string Chemin d'accès relatif ou absolu au fichier de logs
    */
-  private static $logFilePath = '';
+  protected static $logFilePath = '';
 
   /**
    * Active les logs
@@ -83,7 +83,7 @@ class Log
    * @return boolean
    * @throws \Exception
    */
-  private static function setPath($writePath)
+  protected static function setPath($writePath)
   {
     if (is_file($writePath)) {
       self::$logFilePath = $writePath;
