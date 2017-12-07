@@ -64,12 +64,13 @@ class Debug implements AssetsInterface
   /**
    * Affiche le dump de la structure d'une variable
    *
-   * @param  mixed   $var    Variable à tracer
+   * @param  mixed    $var      Variable à tracer
+   * @param  integer  $maxSize  Si renseigné, permet de limiter la taille des variables tracées.
    */
-  public static function dump($var)
+  public static function dump($var, $maxSize = null)
   {
     if (self::$activated) {
-      print static::getDump($var);
+      print static::getDump($var, $maxSize);
     }
   }
 
@@ -77,11 +78,13 @@ class Debug implements AssetsInterface
    * Retourne le dump de la structure d'une variable
    *
    * @param  mixed   $var  Variable à tracer
+   * @param  integer  $maxSize  Si renseigné, permet de limiter la taille des variables tracées.
    * @return string        Dump formaté HTML de la structure
    * @todo Tests sur les classes SGBD à refaire
    */
-  public static function getDump($var)
+  public static function getDump($var, $maxSize = null)
   {
+    
     // Trace
     $trace = debug_backtrace();
 
@@ -113,7 +116,7 @@ class Debug implements AssetsInterface
     } elseif (is_object($var) && get_class($var) == 'sylab\framework\query\QueryResult') {
       $dump .= static::getDumpQueryResult($var);
     } else {
-      $dump .= static::getDumpContent($var);
+      $dump .= static::getDumpContent($var, $maxSize);
     }
     $dump .= '</pre></div>';
 
@@ -173,11 +176,12 @@ class Debug implements AssetsInterface
    * @param  type $var  Variable à dumper
    * @return string     Dump formatté HTML
    */
-  protected static function getDumpContent($var)
+  protected static function getDumpContent($var, $maxSize = null)
   {
+    
     $dump = '<div class="dump_segment_content_main">';
       $dump .= '<div class="dump_variable">';
-        $dump .= sprintf('<ul>%s</ul>', static::dumpElement($var));
+        $dump .= sprintf('<ul>%s</ul>', static::dumpElement($var, '', $maxSize));
       $dump .= '</div>';
     $dump .= '</div>';
     return $dump;
@@ -188,9 +192,10 @@ class Debug implements AssetsInterface
    *
    * @param  mixed   $var   Variable à tracer
    * @param  string  $name  Nom de l'élément ('' par défaut)
+   * @param  integer  $maxSize  Si renseigné, permet de limiter la taille des variables tracées.
    * @return string         Dump de la variable
    */
-  protected static function dumpElement($var, $name = '')
+  protected static function dumpElement($var, $name = '', $maxSize = null)
   {
     $dump = '';
 
@@ -220,7 +225,12 @@ class Debug implements AssetsInterface
 
     // Affichage du contenu
     if ($type == 'string') {
-      $dump .= '<div class="dump_item_content"><pre>' . htmlspecialchars($var) . '</pre></div>';
+      
+      $dt = htmlspecialchars($var);
+      if($maxSize && strlen($dt) > $maxSize){
+        $dt = substr($dt, 0, $maxSize).'[...]';
+      }
+      $dump .= '<div class="dump_item_content"><pre>' . $dt . '</pre></div>';
     } else if ($type == 'boolean') {
       $dump .= '<div class="dump_item_content"><pre>' . ($var ? 'TRUE' : 'FALSE') . '</pre></div>';
     } else if ($type == 'object') {
@@ -235,7 +245,7 @@ class Debug implements AssetsInterface
     if ($iterable) {
       $dump .= '<ul>';
       foreach ($var as $key => $e) {
-        $dump .= static::dumpElement($e, $key);
+        $dump .= static::dumpElement($e, $key, $maxSize);
       }
       $dump .= '</ul>';
     }
